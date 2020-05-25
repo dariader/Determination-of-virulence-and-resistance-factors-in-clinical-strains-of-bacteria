@@ -1,0 +1,4 @@
+while read i; do echo i;
+/home/daria_der/Downloads/Soft/TrimGalore-0.6.0/trim_galore --phred33 --trim-n -o trimmed --cores 4 --paired $i_R1_001.fastq.gz $i_R2_001.fastq.gz; done < read_ids
+
+

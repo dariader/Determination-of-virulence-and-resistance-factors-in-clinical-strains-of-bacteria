@@ -1,0 +1,5 @@
+
+python3 ~/characterize_neisseria_capsule.py -d . -o . -t 8
+
+python2 /home/daria_der/bin/meningotype --all *.fasta
+

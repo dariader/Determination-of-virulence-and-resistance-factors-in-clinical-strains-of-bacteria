@@ -1,0 +1,30 @@
+
+declare -a ARR=("61_S9" "62_S6" "70_S5" "97_S4" "43_S24" "57_S18" "60_S22" "219_S1" "694_S3" "146_S21" "171_S11" "175_S10" "212_S14" "286_S15" "330_S16" "344_S23" "795_S13" "298-2_S2" "2502_S12" "3249_S17" "79less_S20" "79more_S19" "665large_S8" "665white_S7");
+	
+for i in ${ARR[@]};
+do bwa index "$i"_FG.fasta
+bwa mem -t 8 "$i"_FG.fasta ../../trimmed_reads/reads/"$i"_1.fq.gz ../../trimmed_reads/reads/"$i"_2.fq.gz ../../trimmed_reads/unpaired/"$i"_1_unpaired_1.fq.gz ../../trimmed_reads/unpaired/"$i"_2_unpaired_2.fq.gz > "$i"_alignment.sam;
+done
+
+for i in *.sam; do echo $i; samtools view -bS $i -o "$i".bam -@ 7; done
+for i in *.sam.bam; do echo $i; samtools sort $i  -o "$i".sorted -@ 7; done
+for i in *.sam.sorted.bam; do echo $i; samtools index "$i"; done
+
+
+
+#### isolate comparison: 219_S8_FG vs 212_S1_FG 
+
+
+
+bwa index /media/daria_der/linuxdata/all_assemblies_NIIDI/contig_correction/219_S1_FG.fasta
+
+
+bwa mem -t 8 /media/daria_der/linuxdata/all_assemblies_NIIDI/contig_correction/219_S1_FG.fasta /media/daria_der/Seagate_daria_der1/1_Project/Neisseria/trimmed_reads/reads/212_S14_1.fq.gz /media/daria_der/Seagate_daria_der1/1_Project/Neisseria/trimmed_reads/reads/212_S14_2.fq.gz> 212_alignment.sam;
+done
+
+for i in 212_alignment.sam; do echo $i; samtools view -bS $i -o "$i".bam -@ 7; done
+for i in 212_alignment.sam.bam; do echo $i; samtools sort $i  -o "$i".sorted.bam -@ 7; done
+for i in 212_alignment.sam.bam.sorted.bam; do echo $i; samtools index "$i"; done
+samtools mpileup -d30000 -f /media/daria_der/linuxdata/all_assemblies_NIIDI/contig_correction/219_S1_FG.fasta
+ 212_sr_alignment.bam > 212_snp_call.mpileup  
+varscan mpileup2snp 212_snp_call.mpileup --min-var-freq 0.95 --variants --output-vcf 1 > 212_Variants095_84k.vcf

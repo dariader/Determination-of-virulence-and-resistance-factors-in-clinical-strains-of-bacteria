@@ -1,0 +1,16 @@
+
+alignment to 16S
+
+bwa index  /media/daria_der/Seagate_daria_der/1_Project/Databases/16S/nmeninghitis_16S.fasta
+
+declare -a ARR=("61_S9" "62_S6" "70_S5" "97_S4" "43_S24" "57_S18" "60_S22" "219_S1" "694_S3" "146_S21" "171_S11" "175_S10" "212_S14" "286_S15" "330_S16" "344_S23" "795_S13" "298-2_S2" "2502_S12" "3249_S17" "79less_S20" "79more_S19" "665large_S8" "665white_S7");
+	
+for i in ${ARR[@]};
+do echo $i;
+bwa mem -t 8 /media/daria_der/Seagate_daria_der/1_Project/Databases/16S/nmeninghitis_16S.fasta ../../trimmed_reads/reads/"$i"_1.fq.gz ../../trimmed_reads/reads/"$i"_2.fq.gz > "$i"_16S_alignment.sam;
+done
+for i in *_16S_alignment.sam; do
+	 echo $i;
+	 samtools view -bS $i -o "$i".bam -@ 7; 
+	samtools sort "$i".bam "$i".bam.sorted -@ 7; 
+	samtools index "$i".bam.sorted.bam; done

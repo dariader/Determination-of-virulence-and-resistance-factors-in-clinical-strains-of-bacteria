@@ -1,0 +1,5 @@
+#long reads assembly
+ unicycler -l ./Kg_nanopore.fastq.gz -1 ./Kg_1.fq.gz -2 ./Kg_2.fq.gz -t 7 -o unicycler_kerstersia
+
+#short read assembly
+unicycler -1 1968_1.fq.gz -2 1968_2.fq.gz -o unicycler/1968 -t 8 --keep 3

@@ -1,0 +1,16 @@
+alignment to 23S
+
+bwa index /media/daria_der/Seagate_daria_der/1_Project/Databases/23S/23S_nmeninghitidis.fasta
+
+declare -a ARR=("665large_S8" "665white_S7" "97_S4" "61_S9" "62_S6" "70_S5" "43_S24" "57_S18" "60_S22" "219_S1" "694_S3" "146_S21" "171_S11" "175_S10" "212_S14" "286_S15" "330_S16" "344_S23" "795_S13" "298-2_S2" "2502_S12" "3249_S17" "79less_S20" "79more_S19" );
+	
+for i in ${ARR[@]};
+do echo $i;
+echo "$i"
+bwa mem -t 8 /media/daria_der/Seagate_daria_der/1_Project/Databases/23S/23S_nmeninghitidis.fasta ../../trimmed_reads/reads/"$i"_1.fq.gz ../../trimmed_reads/reads/"$i"_2.fq.gz > "$i"_23S_alignment.sam;
+echo "	bam-sam"
+	 samtools view -bS "$i"_23S_alignment.sam -o "$i"_23S_alignment.sam.bam -@ 7; 
+echo "	sort bam"
+	samtools sort "$i"_23S_alignment.sam.bam "$i"_23S_alignment.sam.bam.sorted -@ 7; 
+echo "	index bam"
+	samtools index "$i"_23S_alignment.sam.bam.sorted.bam; done
